@@ -1,0 +1,18 @@
+[Unit]
+Description=FP_00 Streamlit payment dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=fpapp
+Group=fpapp
+WorkingDirectory=/opt/fpapp/app
+Environment=HOME=/opt/fpapp
+UMask=0077
+ExecStart=/opt/fpapp/venv/bin/python -m streamlit run app.py --server.address=127.0.0.1 --server.port=8501 --server.headless=true
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
