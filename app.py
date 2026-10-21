@@ -174,14 +174,6 @@ MONTHS_UK = (
 )
 
 
-def set_active_date(key, value):
-    """Синхронізувати вибрану дату з чернеткою в меню."""
-    st.session_state[key] = value
-    st.session_state[f"{key}_year"] = value.year
-    st.session_state[f"{key}_month"] = value.month
-    st.session_state[f"{key}_day"] = value.day
-
-
 def choose_date(key, available_dates):
     """Вибрати дату в меню поруч із полем, лише з наявних у джерелі."""
     current = st.session_state[key]
@@ -230,12 +222,6 @@ def date_selector(label, key, available_dates):
         choose_date(key, available_dates)
 
 
-def set_preset(days):
-    set_active_date(
-        "start_date", st.session_state["end_date"] - timedelta(days=days - 1)
-    )
-
-
 try:
     available_dates = load_available_dates()
 except ValueError as error:
@@ -267,16 +253,6 @@ with st.sidebar:
         f"Доступні дати: {format_date(first_available_date)}–"
         f"{format_date(last_available_date)}."
     )
-    st.caption("Швидкий вибір від кінцевої дати")
-    preset_columns = st.columns(3)
-    for column, days in zip(preset_columns, (7, 14, 30)):
-        with column:
-            st.button(
-                f"{days} днів", on_click=set_preset, args=(days,),
-                width="stretch",
-                disabled=(st.session_state["end_date"] - first_available_date).days + 1 < days,
-            )
-
 start_date = st.session_state["start_date"]
 end_date = st.session_state["end_date"]
 comparison_start = st.session_state["comparison_start"]
